@@ -11,15 +11,22 @@ import {
 } from "react-icons/io";
 import { IoCheckmark, IoPencil } from "react-icons/io5";
 import { SeatFormation } from "../interfaces/seat_formation";
-import { getSeatNumbersFromIds } from "../utils/seatformation_utils";
+import {
+  getBookedSeatsMap,
+  getSeatNumbersFromIds,
+} from "../utils/seatformation_utils";
+import { BookedSeat } from "../interfaces/booked_seat";
+import { toast } from "react-toastify";
 
 export default function SeatsFormationView({
   previousSeatFormations = [],
+  bookedSeats,
   onChangeSeatFormation,
   onChangeSeat,
   onToggleEdit,
 }: {
   previousSeatFormations?: Array<Array<SeatFormation>>;
+  bookedSeats?: BookedSeat[];
   onChangeSeatFormation?: (seatFormations: Array<Array<SeatFormation>>) => void;
   onChangeSeat?: (
     selectedSeat: { seatId: string; seatNumber: number } | undefined
@@ -27,6 +34,8 @@ export default function SeatsFormationView({
   onToggleEdit?: (isEditMode: boolean) => void;
 }) {
   const seatIdsNumbersRef = useRef<Map<string, number>>(new Map());
+  const bookedSeatIdsRef = useRef<Map<string, BookedSeat>>(new Map());
+
   const listRef = useRef<HTMLDivElement>(null);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -45,7 +54,7 @@ export default function SeatsFormationView({
 
   useEffect(() => {
     if (seatFormations.length == 0) {
-      setSeatFormations([[{ val: "#" }]]);
+      setSeatFormations([[{ seats: 0, rows: 10, stage: true }]]);
     }
   }, []);
 
@@ -57,6 +66,15 @@ export default function SeatsFormationView({
   }, []);
 
   function selectSeat(newSeatId: string) {
+    if (bookedSeatIdsRef.current?.get(newSeatId) !== undefined) {
+      toast(
+        `Seat number ${
+          seatIdsNumbersRef.current.get(newSeatId) ?? ""
+        } is already booked`,
+        { type: "error" }
+      );
+      return;
+    }
     onChangeSeat?.(
       newSeatId === selectedSeatId
         ? undefined
@@ -97,7 +115,7 @@ export default function SeatsFormationView({
               0,
               colIndex + (direction === "bottom" ? 1 : 0)
             ),
-            [{ val: "" }],
+            [{ seats: 0, rows: 0 }],
             ...seatFormations.slice(
               colIndex + (direction === "bottom" ? 1 : 0)
             ),
@@ -109,7 +127,7 @@ export default function SeatsFormationView({
                     0,
                     rowIndex + (direction == "right" ? 1 : 0)
                   ),
-                  { val: "" },
+                  { seats: 0, rows: 0 },
                   ...colFormations.slice(
                     rowIndex + (direction == "right" ? 1 : 0)
                   ),
@@ -147,11 +165,12 @@ export default function SeatsFormationView({
         : seatFormations.map((colFormations, prevcolIndex) =>
             colIndex === prevcolIndex
               ? colFormations.filter(
-                  (_, prevrowIndex) =>
-                    prevrowIndex != rowIndex + (direction === "right" ? 1 : 0)
+                  (_, prevRowIndex) =>
+                    prevRowIndex != rowIndex + (direction === "right" ? 1 : 0)
                 )
               : colFormations
           );
+
     setSeatFormations(newSeatFormations);
     onChangeSeatFormation?.(newSeatFormations);
 
@@ -159,7 +178,7 @@ export default function SeatsFormationView({
   }
 
   function updateFormation(
-    val?: string,
+    seats?: number,
     rows?: number,
     dir?: "-" | "|" | "\\" | "/"
   ) {
@@ -171,10 +190,10 @@ export default function SeatsFormationView({
     const newSeatFormations = seatFormations.map(
       (colFormations, prevcolIndex) =>
         colIndex === prevcolIndex
-          ? colFormations.map((seatFormation, prevrowIndex) =>
-              rowIndex === prevrowIndex
-                ? val !== undefined
-                  ? { ...seatFormation, val }
+          ? colFormations.map((seatFormation, prevRowIndex) =>
+              rowIndex === prevRowIndex
+                ? seats !== undefined
+                  ? { ...seatFormation, seats }
                   : rows !== undefined
                   ? { ...seatFormation, rows }
                   : dir !== undefined
@@ -213,6 +232,8 @@ export default function SeatsFormationView({
           {seatFormations.map((colFormations, colIndex) => {
             if (colIndex === 0) {
               seatIdsNumbersRef.current = getSeatNumbersFromIds(seatFormations);
+              if (bookedSeats)
+                bookedSeatIdsRef.current = getBookedSeatsMap(bookedSeats);
             }
 
             return (
@@ -238,95 +259,45 @@ export default function SeatsFormationView({
                           : undefined
                       }
                     >
-                      <ul className="flex flex-col items-center gap-1">
-                        {Array(
-                          parseInt(formation.val)
-                            ? Math.ceil(
-                                parseInt(formation.val) /
-                                  (formation.rows ||
-                                    Math.floor(
-                                      Math.sqrt(parseInt(formation.val))
-                                    ))
-                              )
-                            : 1
-                        )
+                      <ul
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: `repeat(${formation.rows}, minmax(0, 1fr))`,
+                        }}
+                        className={`items-center gap-1`}
+                      >
+                        {Array(formation.seats)
                           .fill(null)
-                          .map((_, seatColIndex) => {
+                          .map((_, seatIndex) => {
+                            const seatId = `${colIndex}:${rowIndex}:${seatIndex}`;
                             return (
-                              <ul
-                                key={seatColIndex}
-                                className="flex flex-row items-center gap-1"
+                              <li
+                                key={seatIndex}
+                                className={`text-center rounded-sm p-3 cursor-pointer border-2 ${
+                                  selectedSeatId == seatId
+                                    ? "border-purple-700"
+                                    : bookedSeatIdsRef.current?.get(seatId) !==
+                                      undefined
+                                    ? "border-red-500"
+                                    : "border-stone-500"
+                                }`}
+                                onClick={
+                                  !onToggleEdit
+                                    ? () => selectSeat(seatId)
+                                    : undefined
+                                }
                               >
-                                {Array(
-                                  parseInt(formation.val)
-                                    ? parseInt(formation.val) %
-                                        (formation.rows ||
-                                          Math.floor(
-                                            Math.sqrt(parseInt(formation.val))
-                                          )) >
-                                        0 &&
-                                      seatColIndex ==
-                                        Math.ceil(
-                                          parseInt(formation.val) /
-                                            (formation.rows ||
-                                              Math.floor(
-                                                Math.sqrt(
-                                                  parseInt(formation.val)
-                                                )
-                                              ))
-                                        ) -
-                                          1
-                                      ? parseInt(formation.val) %
-                                        (formation.rows ??
-                                          Math.floor(
-                                            Math.sqrt(parseInt(formation.val))
-                                          ))
-                                      : formation.rows ||
-                                        Math.floor(
-                                          Math.sqrt(parseInt(formation.val))
-                                        )
-                                    : formation.rows || 1
-                                )
-                                  .fill(null)
-                                  .map((_, seatRowIndex) => {
-                                    const seatId = `${colIndex}:${rowIndex}:${seatColIndex}:${seatRowIndex}`;
-                                    return (
-                                      <li
-                                        key={seatRowIndex}
-                                        className={`relative rounded-sm p-3 cursor-pointer bg-stone-700 border-2 ${
-                                          selectedSeatId == seatId
-                                            ? "border-purple-700"
-                                            : "border-transparent"
-                                        }`}
-                                        onClick={
-                                          !onToggleEdit
-                                            ? () => selectSeat(seatId)
-                                            : undefined
-                                        }
-                                      >
-                                        {/* {parseInt(formation.val) 
-                                          ? `${colIndex + 1}:${rowIndex + 1}:
-                                        ${seatColIndex + 1}:${seatRowIndex + 1}`
-                                          : "    "} */}
-                                        {parseInt(formation.val)
-                                          ? `${seatIdsNumbersRef.current.get(
-                                              seatId
-                                            )}`
-                                          : "    "}
-                                      </li>
-                                    );
-                                  })}
-                              </ul>
+                                {seatIdsNumbersRef.current.get(seatId)}
+                              </li>
                             );
                           })}
                       </ul>
-                      <p className="absolute top-0 right-0 bottom-0 left-0 flex justify-center items-center text-center">
-                        {formation.val == "#"
-                          ? "Stage"
-                          : // : formation.val.trim() == "0"
-                            // ? "Space"
-                            ""}
-                      </p>
+
+                      {formation.stage && (
+                        <p className="absolute top-0 right-0 bottom-0 left-0 flex justify-center items-center text-center">
+                          {formation.stage ? "Stage" : ""}
+                        </p>
+                      )}
                     </div>
                   );
                 })}
@@ -341,7 +312,7 @@ export default function SeatsFormationView({
             Input 0 for Space, Number for seats
           </p> */}
           <div className="w-full flex items-center gap-2 px-4">
-            {(getSelectedFormation()?.val ?? "") !== "#" && (
+            {!getSelectedFormation()?.stage && (
               <FormationAction title="Total Seats">
                 <TextField
                   placeholder="50"
@@ -351,9 +322,14 @@ export default function SeatsFormationView({
                       width: 50,
                     },
                   }}
-                  value={getSelectedFormation()?.val ?? ""}
+                  type="number"
+                  value={getSelectedFormation()?.seats ?? ""}
                   onChange={(e) => {
-                    updateFormation(e.target.value);
+                    updateFormation(
+                      parseInt(e.target.value) > 0
+                        ? parseInt(e.target.value)
+                        : 0
+                    );
                   }}
                 />
               </FormationAction>
@@ -370,9 +346,12 @@ export default function SeatsFormationView({
                   },
                 }}
                 type="number"
-                value={getSelectedFormation()?.rows || ""}
+                value={getSelectedFormation()?.rows ?? ""}
                 onChange={(e) => {
-                  updateFormation(undefined, parseInt(e.target.value));
+                  updateFormation(
+                    undefined,
+                    parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 0
+                  );
                 }}
               />
             </FormationAction>
@@ -445,7 +424,7 @@ export default function SeatsFormationView({
             >
               \
             </FormationAction> */}
-            {(getSelectedFormation()?.val ?? "") !== "#" && (
+            {!getSelectedFormation()?.stage && (
               <FormationAction
                 title="Remove"
                 onClick={() => {
@@ -502,7 +481,7 @@ export default function SeatsFormationView({
                           }
                         />
                         <TextField
-                          value={formation.val}
+                          value={formation.seats}
                           onChange={(e) =>
                             updateFormationValue(
                               colIndex,

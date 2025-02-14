@@ -18,6 +18,11 @@ import { toast } from "react-toastify";
 import { convertDateToString } from "../utils/date_utils";
 import { getRandomString } from "../utils/string_util";
 import { addShow } from "../slices/savedShowsSlice";
+import { BookedSeat } from "../interfaces/booked_seat";
+import { useAppSelector } from "../selectors/useAppSelector";
+import { updateShow as updateSceduledShow } from "../slices/sceduledShowsSlice";
+import { updateShow as updateUpcomingShow } from "../slices/upcomingShows";
+import { updateShow as updateLiveShow } from "../slices/liveShowsSlice";
 
 export default function DisplayOrBookShowView({
   show,
@@ -26,10 +31,11 @@ export default function DisplayOrBookShowView({
   show: Show;
   onClose: () => void;
 }) {
+  const user = useAppSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<number>(1);
+  const [tab, setTab] = useState<number>(0);
   const [selectedSeat, setSelectedSeat] = useState<
     { seatId: string; seatNumber: number } | undefined
   >();
@@ -54,6 +60,20 @@ export default function DisplayOrBookShowView({
       toast("You haven't selected a seat yet", { type: "error" });
       return;
     }
+    const bookedSeat: BookedSeat = {
+      seatId: selectedSeat.seatId,
+      userId: user?.userId ?? "",
+    };
+    const newBookedSeats = [...show.bookedSeats, bookedSeat];
+    const newShow = { ...show, bookedSeats: newBookedSeats };
+
+    dispatch(updateSceduledShow(newShow));
+    if (getShowStatus(show) === ShowStatus.upcoming) {
+      dispatch(updateUpcomingShow(newShow));
+    } else if (getShowStatus(show) === ShowStatus.live) {
+      dispatch(updateLiveShow(newShow));
+    }
+
     const booking: Booking = {
       bookingId: getRandomString(),
       showId: show.showId,
@@ -61,9 +81,9 @@ export default function DisplayOrBookShowView({
       seatId: selectedSeat.seatId,
       seatNumber: selectedSeat.seatNumber,
       amount: show.bookingAmount,
-      userId: "myId",
+      userId: user?.userId ?? "",
       bookedDateTime: convertDateToString(new Date()),
-      show: show,
+      show: newShow,
     };
     dispatch(addBooking(booking));
     toast(
@@ -267,6 +287,7 @@ export default function DisplayOrBookShowView({
       <div className="relative md:flex-1 md:h-full flex flex-col gap-2 md:overflow-y-auto">
         <SeatsFormationView
           previousSeatFormations={show.venue.seatFormations}
+          bookedSeats={show.bookedSeats}
           onChangeSeat={setSelectedSeat}
         />
       </div>

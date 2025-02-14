@@ -21,14 +21,14 @@ export const mockShows: Show[] = [
       venuePicturesOrVideos: [],
       seatsCapacity: 1000,
       seatFormations: [
-        [{ val: "0" }],
+        [{ seats: 0, rows: 10 }],
         [
-          { val: "50", rows: 10 },
-          { val: "20", rows: 5 },
+          { seats: 50, rows: 10 },
+          { seats: 20, rows: 5 },
         ],
         [
-          { val: "40", rows: 10 },
-          { val: "200", rows: 50 },
+          { seats: 40, rows: 10 },
+          { seats: 200, rows: 50 },
         ],
       ],
     },

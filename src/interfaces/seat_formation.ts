@@ -1,5 +1,6 @@
 export interface SeatFormation {
-  val: string;
-  rows?: number;
+  seats: number;
+  rows: number;
   dir?: "-" | "|" | "\\" | "/";
+  stage?: boolean;
 }

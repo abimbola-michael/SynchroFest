@@ -31,6 +31,7 @@ import { getSeatNumbersFromIds } from "../utils/seatformation_utils";
 import { getShowStatus } from "../utils/show_utils";
 import { ShowStatus } from "../enums/show_status";
 import { updateUser } from "../slices/userSlice";
+import { getRandomString } from "../utils/string_util";
 
 export default function ScheduleOrUpdateShowView({
   show = {
@@ -107,7 +108,6 @@ export default function ScheduleOrUpdateShowView({
   }
 
   function scheduleOrUpdateShow(show: Show) {
-    show.user = user;
     dispatch(updateVenue(show.venue));
     dispatch(updateUser({ ...user, venue: show.venue }));
     if (show.showId.length > 0) {
@@ -122,6 +122,10 @@ export default function ScheduleOrUpdateShowView({
         type: "success",
       });
     } else {
+      show.userId = user?.userId ?? "";
+      show.showId = getRandomString();
+
+      show.user = user;
       dispatch(addSceduledShow(show));
       dispatch(addUpcomingShow(show));
       dispatch(updateMainTab(0));
