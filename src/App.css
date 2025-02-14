@@ -1,0 +1,80 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+@import "tailwindcss";
+@theme {
+  --color-primary: "#FF00FF";
+  --color-electric-blue: "#00FFFF";
+  --color-neon-pink: "#FF00FF";
+  --color-cyber-purple: "#8A2BE2";
+  --color-lime-green: "#39FF14";
+  --color-hot-red: "#FF073A";
+  --color-amber-orange: "#FFBF00";
+  --color-deep-sky-blue: "#00BFFF";
+  --color-vivid-violet: "#9400D3";
+  --color-laser-yellow: "#FFFF00";
+  --color-glowing-white: "#FFFFFF";
+}
+/* For Chrome, Safari, and Edge */
+::-webkit-scrollbar {
+  width: 4px; /* Thin scrollbar */
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* No track background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: gray; /* Scrollbar color */
+  border-radius: 10px;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: gray transparent; /* Thumb and track */
+}
+
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+} */
