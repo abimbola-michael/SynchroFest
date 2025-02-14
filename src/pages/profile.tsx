@@ -193,7 +193,7 @@ export default function Profile() {
                 </ul>
               </div>
 
-              <div className="relative md:flex-1 md:h-full flex flex-col gap-2 md:overflow-y-auto">
+              <div className="relative md:flex-1 md:h-full flex flex-col gap-2 md:overflow-y-auto ">
                 <SeatsFormationView
                   previousSeatFormations={values.venue.seatFormations}
                   onChangeSeatFormation={(formations) => {
