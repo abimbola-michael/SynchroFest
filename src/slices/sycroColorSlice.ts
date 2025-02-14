@@ -32,7 +32,7 @@ const syncroColorslice = createSlice({
   name: "syncroColor",
   initialState,
   reducers: {
-    changeColor: (state, action) => {
+    changeColor: (state, _) => {
       state.value =
         state.value == syncroColors.length - 1 ? 0 : state.value + 1;
     },

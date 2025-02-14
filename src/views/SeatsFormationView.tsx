@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TextField } from "@mui/material";
 
 import FormationAction from "../components/FormationAction";
@@ -141,13 +141,13 @@ export default function SeatsFormationView({
     const newSeatFormations =
       direction === "top" || direction === "bottom"
         ? seatFormations.filter(
-            (colFormations, prevcolIndex) =>
+            (_, prevcolIndex) =>
               prevcolIndex !== colIndex + (direction === "bottom" ? 1 : 0)
           )
         : seatFormations.map((colFormations, prevcolIndex) =>
             colIndex === prevcolIndex
               ? colFormations.filter(
-                  (seatFormation, prevrowIndex) =>
+                  (_, prevrowIndex) =>
                     prevrowIndex != rowIndex + (direction === "right" ? 1 : 0)
                 )
               : colFormations

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { convertStringToDate, formatCountdown } from "../utils/date_utils";
 
 export default function CountdownTimer({

@@ -7,7 +7,7 @@ const upcomingShowsShowSlice = createSlice({
   name: "upcomingShowsShows",
   initialState,
   reducers: {
-    clearShows: (state, action) => {
+    clearShows: (state, _) => {
       state.value = [];
     },
     addShow: (state, action) => {

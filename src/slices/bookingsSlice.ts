@@ -7,7 +7,7 @@ const bookingSlice = createSlice({
   name: "bookings",
   initialState,
   reducers: {
-    clearBookings: (state, action) => {
+    clearBookings: (state, _) => {
       state.value = [];
     },
     addBooking: (state, action) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppSelector } from "../selectors/useAppSelector";
 import DialogMenu from "../components/DialogMenu";
 import BookingItem from "../listitems/BookingItem";

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Show } from "../interfaces/show";
 
 import { Button, Tab, Tabs } from "@mui/material";
@@ -45,7 +45,7 @@ export default function DisplayOrBookShowView({
     setShowStatus(showStatus);
   }, [show]);
 
-  function updateTab(e: React.SyntheticEvent, tab: number) {
+  function updateTab(_: React.SyntheticEvent, tab: number) {
     setTab(tab);
   }
 
@@ -116,7 +116,7 @@ export default function DisplayOrBookShowView({
               src={show.showVideoTeaser}
               className="w-full h-full"
               controls
-              onLoadedData={(e) => {}}
+              onLoadedData={(_) => {}}
             />
           )}
           {/* {((tab == 0 && show.showBanner.length > 0) ||

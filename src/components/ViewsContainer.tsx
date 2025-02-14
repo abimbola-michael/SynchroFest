@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 export default function ViewsContainer({
   children,

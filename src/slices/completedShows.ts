@@ -7,7 +7,7 @@ const completedShowSlice = createSlice({
   name: "completedShows",
   initialState,
   reducers: {
-    clearShows: (state, action) => {
+    clearShows: (state, _) => {
       state.value = [];
     },
     addShow: (state, action) => {

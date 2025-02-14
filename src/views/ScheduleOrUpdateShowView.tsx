@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Show } from "../interfaces/show";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -102,7 +102,7 @@ export default function ScheduleOrUpdateShowView({
     }),
   });
 
-  function updateTab(e: React.SyntheticEvent, tab: number) {
+  function updateTab(_: React.SyntheticEvent, tab: number) {
     setTab(tab);
   }
 
@@ -185,7 +185,7 @@ export default function ScheduleOrUpdateShowView({
                     src={values.showVideoTeaser}
                     className="w-full h-full"
                     controls
-                    onLoadedData={(e) => {}}
+                    onLoadedData={(_) => {}}
                   />
                 )}
                 {((tab == 0 && values.showBanner.length > 0) ||

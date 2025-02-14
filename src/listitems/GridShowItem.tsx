@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Show } from "../interfaces/show";
 import ProfilePhoto from "../components/ProfilePhoto";
 import { getShowStatus } from "../utils/show_utils";

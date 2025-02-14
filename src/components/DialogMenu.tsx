@@ -1,11 +1,5 @@
-import React, { ReactElement, ReactNode, useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from "@mui/material";
+import React, { ReactNode, useState } from "react";
+import { Dialog, DialogContent } from "@mui/material";
 import { IoMdArrowBack } from "react-icons/io";
 
 export default function DialogMenu({
@@ -14,10 +8,10 @@ export default function DialogMenu({
   children,
   className,
   title,
-  cancelText,
-  onCancel,
-  options,
-  onSelectOption,
+  // cancelText,
+  // onCancel,
+  // options,
+  // onSelectOption,
   fullScreen,
   fullWidth,
 }: {
@@ -26,10 +20,10 @@ export default function DialogMenu({
   children?: ReactNode | ((onClose: () => void) => ReactNode);
   className?: string;
   title?: string;
-  cancelText?: string;
-  onCancel?: () => void;
-  options?: string[];
-  onSelectOption?: (option?: string) => void;
+  // cancelText?: string;
+  // onCancel?: () => void;
+  // options?: string[];
+  // onSelectOption?: (option?: string) => void;
   fullScreen?: boolean;
   fullWidth?: boolean;
 }) {

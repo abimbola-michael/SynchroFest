@@ -7,7 +7,7 @@ const liveShowSlice = createSlice({
   name: "liveShows",
   initialState,
   reducers: {
-    clearShows: (state, action) => {
+    clearShows: (state, _) => {
       state.value = [];
     },
     addShow: (state, action) => {

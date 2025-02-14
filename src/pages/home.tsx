@@ -15,7 +15,7 @@ export default function Home() {
   const tab = useAppSelector((state) => state.mainTab.value);
   const dispatch = useDispatch();
 
-  function updateTab(e: React.SyntheticEvent, tab: number) {
+  function updateTab(_: React.SyntheticEvent, tab: number) {
     dispatch(updateMainTab(tab));
   }
 

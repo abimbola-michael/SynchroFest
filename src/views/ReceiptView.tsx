@@ -1,11 +1,10 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Booking } from "../interfaces/booking";
 import ShowReceiptItem from "../components/ShowReceiptItem";
 import { Button } from "@mui/material";
 
 export default function ReceiptView({
   booking,
-  onClose,
 }: {
   booking: Booking;
   onClose: () => void;

@@ -46,7 +46,7 @@ export default function Profile() {
     }),
   });
 
-  function updateTab(e: React.SyntheticEvent, tab: number) {
+  function updateTab(_: React.SyntheticEvent, tab: number) {
     setTab(tab);
   }
 

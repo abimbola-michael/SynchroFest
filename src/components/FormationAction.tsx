@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 export default function FormationAction({
   onClick,

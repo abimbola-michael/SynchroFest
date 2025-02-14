@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Drawer, MenuItem } from "@mui/material";
 import { IoMdMenu } from "react-icons/io";
 
@@ -29,7 +29,9 @@ export default function DrawerMenu({
   return (
     <>
       {child ? (
-        <div className={`cursor-pointer ${className}`} onClick={handleOpen}>{child}</div>
+        <div className={`cursor-pointer ${className}`} onClick={handleOpen}>
+          {child}
+        </div>
       ) : (
         <IoMdMenu className={`text-2xl ${className}`} onClick={handleOpen} />
       )}

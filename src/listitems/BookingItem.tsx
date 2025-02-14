@@ -1,4 +1,3 @@
-import React from "react";
 import { Booking } from "../interfaces/booking";
 import { getImgPath } from "../utils/img_util";
 import ProfilePhoto from "../components/ProfilePhoto";

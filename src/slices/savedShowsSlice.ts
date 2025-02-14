@@ -7,7 +7,7 @@ const scheduledShowSlice = createSlice({
   name: "scheduledShows",
   initialState,
   reducers: {
-    clearShows: (state, action) => {
+    clearShows: (state, _) => {
       state.value = [];
     },
     addShow: (state, action) => {
